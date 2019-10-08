@@ -1,28 +1,28 @@
 package ru.javawebinar.topjava.dao;
 
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class MealDAOImpl implements MealDAO {
-
-    private static Map<Integer, Meal> meals = new ConcurrentHashMap<>();
     private static final AtomicInteger AUTO_ID = new AtomicInteger(1);
+    private static Map<Integer, Meal> meals = new ConcurrentHashMap<>();
 
     public MealDAOImpl() {
-        meals.putAll(MealsUtil.getMeals().stream().collect(Collectors.toMap(a -> a.getId(), b -> b)));
+        MealsUtil.getMeals().forEach(meal -> {
+            meal.setId(AUTO_ID.getAndIncrement());
+            meals.put(meal.getId(), meal);
+        });
     }
 
     @Override
     public List<Meal> allMeals() {
-        return new ArrayList<>(meals.values());
+        return meals.values().stream().collect(Collectors.toList());
     }
 
     @Override

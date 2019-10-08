@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://sargue.net/jsptags/time" prefix="javatime" %>
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>Meals</title>
@@ -17,22 +17,31 @@
     <table class="table table-bordered">
         <thead>
         <tr>
+            <th>id</th>
             <th>Дата/Время</th>
             <th>Описание</th>
             <th>Калории</th>
+            <th>Редактировать</th>
+            <th>Удалить</th>
         </tr>
         </thead>
         <tbody>
         <c:forEach var="meal" items="${meals}">
             <tr style="color: ${meal.excess ? 'red' : 'green'};">
+                <td>${meal.id}</td>
                 <javatime:format value="${meal.dateTime}" pattern="yyyy-MM-dd hh:mm" var="pd"/>
                 <td>${pd}</td>
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
+                <td><a href="meals?action=edit&mealId=<c:out value="${meal.id}"/>">Edit</a></td>
+                <td><a href="meals?action=delete&mealId=<c:out value="${meal.id}"/>">Delete</a></td>
             </tr>
         </c:forEach>
+
         </tbody>
     </table>
+    <h2><a href="meals?action=insert">Add Meal</a></h2>
 </div>
+
 </body>
 </html>
