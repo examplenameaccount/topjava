@@ -62,15 +62,5 @@
         </div>
     </form>
 </div>
-
-
-<%--<form method="POST" action='meals' name="frmAddMealTo">--%>
-<%--<javatime:format value="${meal.dateTime}" pattern="yyyy-MM-dd hh:mm" var="pd"/>--%>
-<%--Meal ID : <input type="text" name="mealId" readonly="readonly" value="<c:out value="${meal.id}"/>"/><br/>--%>
-<%--Date/Time : <input type="datetime-local" name="dateTime" value="${meal.dateTime}"><br/>--%>
-<%--Description : <input type="text" name="description" value="<c:out value="${meal.description}"/>"/><br/>--%>
-<%--Calories : <input type="text" name="calories" value="<c:out value="${meal.calories}"/>"/><br/>--%>
-<%--<input type="submit" value="Submit"/>--%>
-<%--</form>--%>
 </body>
 </html>
