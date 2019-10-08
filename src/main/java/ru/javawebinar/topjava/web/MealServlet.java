@@ -28,6 +28,7 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        log.debug("redirect to meals");
         String forward = "";
         String action = request.getParameter("action");
 
@@ -55,7 +56,6 @@ public class MealServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String mealId = request.getParameter("mealId");
-        System.out.println("mealId " + mealId);
         LocalDateTime localDateTime = LocalDateTime.parse(request.getParameter("dateTime"), formatter);
         String description = request.getParameter("description");
         int calories = Integer.parseInt(request.getParameter("calories"));
