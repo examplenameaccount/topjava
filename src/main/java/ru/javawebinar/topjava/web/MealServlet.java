@@ -6,7 +6,6 @@ import ru.javawebinar.topjava.dao.MealDAOImpl;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.MealsUtil;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -55,6 +54,7 @@ public class MealServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
         String mealId = request.getParameter("mealId");
         LocalDateTime localDateTime = LocalDateTime.parse(request.getParameter("dateTime"), formatter);
         String description = request.getParameter("description");
