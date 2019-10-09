@@ -20,7 +20,7 @@
         <div class="form-group row">
             <label for="inputId3" class="col-sm-2 col-form-label">Meal ID: </label>
             <div class="col-sm-10">
-                <input class="form-control" name="mealId" id="inputId3" value="<c:out value="${meal.id}"/>">
+                <input type="hidden" class="form-control" name="mealId" id="inputId3" value="<c:out value="${meal.id}"/>">
             </div>
         </div>
 

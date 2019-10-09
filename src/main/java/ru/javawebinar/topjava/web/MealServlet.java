@@ -19,37 +19,44 @@ import java.time.format.DateTimeFormatter;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealServlet extends HttpServlet {
-    private static final String LIST_MEAL = "/meals.jsp";
-    private static final String INSERT_OR_EDIT = "/editPage.jsp";
-    private static final Logger log = getLogger(MealServlet.class);
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-    private static final MealDAO mealDAO = new MealDAOImpl();
+    private static String LIST_MEAL;
+    private static String INSERT_OR_EDIT;
+    private static Logger log;
+    private static DateTimeFormatter formatter;
+    private static MealDAO mealDAO;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        LIST_MEAL = "/meals.jsp";
+        INSERT_OR_EDIT = "/editPage.jsp";
+        log = getLogger(MealServlet.class);
+        formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        mealDAO = new MealDAOImpl();
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String forward = "";
         String action = request.getParameter("action") == null ? "" : request.getParameter("action").toLowerCase();
-        System.out.println(action.isEmpty());
+        log.debug("performed " + (action.isEmpty() ? "return mealList" : action));
         switch (action) {
             case ("delete"):
                 mealDAO.deleteMealById(Integer.parseInt(request.getParameter("mealId")));
-                request.setAttribute("meals", MealsUtil.getFiltered(mealDAO.allMeals(), LocalTime.MIN, LocalTime.MAX, MealsUtil.getDefaultCaloriesPerDay()));
+                request.setAttribute("meals", MealsUtil.getFiltered(mealDAO.getAll(), LocalTime.MIN, LocalTime.MAX, MealsUtil.getDefaultCaloriesPerDay()));
                 response.sendRedirect(request.getContextPath() + "/meals");
                 break;
             case ("edit"):
                 Meal meal = mealDAO.getById(Integer.parseInt(request.getParameter("mealId")));
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher(INSERT_OR_EDIT).forward(request, response);
-                response.sendRedirect(INSERT_OR_EDIT);
                 break;
             case ("insert"):
                 request.getRequestDispatcher(INSERT_OR_EDIT).forward(request, response);
-                response.sendRedirect(INSERT_OR_EDIT);
                 break;
             default:
-                request.setAttribute("meals", MealsUtil.getFiltered(mealDAO.allMeals(), LocalTime.MIN, LocalTime.MAX, MealsUtil.getDefaultCaloriesPerDay()));
+                request.setAttribute("meals", MealsUtil.getFiltered(mealDAO.getAll(), LocalTime.MIN, LocalTime.MAX, MealsUtil.getDefaultCaloriesPerDay()));
                 request.getRequestDispatcher(LIST_MEAL).forward(request, response);
-                response.sendRedirect("meals.jsp");
                 break;
         }
     }
@@ -60,8 +67,7 @@ public class MealServlet extends HttpServlet {
         LocalDateTime localDateTime = LocalDateTime.parse(request.getParameter("dateTime"), formatter);
         String description = request.getParameter("description");
         int calories = Integer.parseInt(request.getParameter("calories"));
-
-        if (mealId.isEmpty() || mealId == null) {
+        if (mealId == null || mealId.isEmpty()) {
             Meal meal = new Meal(localDateTime, description, calories);
             mealDAO.add(meal);
         } else {
@@ -69,7 +75,7 @@ public class MealServlet extends HttpServlet {
             mealDAO.edit(meal);
         }
 
-        request.setAttribute("meals", MealsUtil.getFiltered(mealDAO.allMeals(), LocalTime.MIN, LocalTime.MAX, MealsUtil.getDefaultCaloriesPerDay()));
+        request.setAttribute("meals", MealsUtil.getFiltered(mealDAO.getAll(), LocalTime.MIN, LocalTime.MAX, MealsUtil.getDefaultCaloriesPerDay()));
         request.getRequestDispatcher(LIST_MEAL).forward(request, response);
         response.sendRedirect("meals.jsp");
     }

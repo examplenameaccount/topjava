@@ -16,12 +16,12 @@ public class MealDAOImpl implements MealDAO {
     public MealDAOImpl() {
         MealsUtil.getMeals().forEach(meal -> {
             meal.setId(AUTO_ID.getAndIncrement());
-            meals.put(meal.getId(), meal);
+            add(meal);
         });
     }
 
     @Override
-    public List<Meal> allMeals() {
+    public List<Meal> getAll() {
         return new ArrayList<>(meals.values());
     }
 
@@ -33,7 +33,7 @@ public class MealDAOImpl implements MealDAO {
 
     @Override
     public Meal edit(Meal meal) {
-        return meals.containsKey(meal.getId()) ? meals.put(meal.getId(), meal) : null;
+        return meals.computeIfPresent(meal.getId(), (key, value) -> meal);
     }
 
     @Override
