@@ -3,11 +3,11 @@ package ru.javawebinar.topjava.dao;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.MealsUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 public class MealDAOImpl implements MealDAO {
     private static final AtomicInteger AUTO_ID = new AtomicInteger(1);
@@ -22,23 +22,18 @@ public class MealDAOImpl implements MealDAO {
 
     @Override
     public List<Meal> allMeals() {
-        return meals.values().stream().collect(Collectors.toList());
+        return new ArrayList<>(meals.values());
     }
 
     @Override
-    public void add(Meal meal) {
+    public Meal add(Meal meal) {
         meal.setId(AUTO_ID.getAndIncrement());
-        meals.put(meal.getId(), meal);
+        return meals.put(meal.getId(), meal);
     }
 
     @Override
-    public void delete(Meal meal) {
-        meals.remove(meal.getId());
-    }
-
-    @Override
-    public void edit(Meal meal) {
-        meals.put(meal.getId(), meal);
+    public Meal edit(Meal meal) {
+        return meals.containsKey(meal.getId()) ? meals.put(meal.getId(), meal) : null;
     }
 
     @Override
@@ -47,7 +42,7 @@ public class MealDAOImpl implements MealDAO {
     }
 
     @Override
-    public void deleteMealToById(int mealId) {
+    public void deleteMealById(int mealId) {
         meals.remove(mealId);
     }
 }

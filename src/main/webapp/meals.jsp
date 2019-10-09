@@ -17,7 +17,6 @@
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th>id</th>
             <th>Дата/Время</th>
             <th>Описание</th>
             <th>Калории</th>
@@ -28,7 +27,6 @@
         <tbody>
         <c:forEach var="meal" items="${meals}">
             <tr style="color: ${meal.excess ? 'red' : 'green'};">
-                <td>${meal.id}</td>
                 <javatime:format value="${meal.dateTime}" pattern="yyyy-MM-dd hh:mm" var="pd"/>
                 <td>${pd}</td>
                 <td>${meal.description}</td>

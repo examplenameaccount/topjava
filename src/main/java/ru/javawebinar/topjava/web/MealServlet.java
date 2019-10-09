@@ -27,30 +27,31 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        log.debug("redirect to meals");
         String forward = "";
-        String action = request.getParameter("action");
-
-        if (action.equalsIgnoreCase("delete")) {
-            int mealId = Integer.parseInt(request.getParameter("mealId"));
-            Meal meal = mealDAO.getById(mealId);
-            mealDAO.delete(meal);
-            forward = LIST_MEAL;
-            request.setAttribute("meals", MealsUtil.getFiltered(mealDAO.allMeals(), LocalTime.MIN, LocalTime.MAX, MealsUtil.getDefaultCaloriesPerDay()));
-        } else if (action.equalsIgnoreCase("edit")) {
-            forward = INSERT_OR_EDIT;
-            int mealId = Integer.parseInt(request.getParameter("mealId"));
-            Meal meal = mealDAO.getById(mealId);
-            request.setAttribute("meal", meal);
-        } else if (action.equalsIgnoreCase("mealList")) {
-            forward = LIST_MEAL;
-            request.setAttribute("meals", MealsUtil.getFiltered(mealDAO.allMeals(), LocalTime.MIN, LocalTime.MAX, MealsUtil.getDefaultCaloriesPerDay()));
-        } else {
-            forward = INSERT_OR_EDIT;
+        String action = request.getParameter("action") == null ? "" : request.getParameter("action").toLowerCase();
+        System.out.println(action.isEmpty());
+        switch (action) {
+            case ("delete"):
+                mealDAO.deleteMealById(Integer.parseInt(request.getParameter("mealId")));
+                request.setAttribute("meals", MealsUtil.getFiltered(mealDAO.allMeals(), LocalTime.MIN, LocalTime.MAX, MealsUtil.getDefaultCaloriesPerDay()));
+                response.sendRedirect(request.getContextPath() + "/meals");
+                break;
+            case ("edit"):
+                Meal meal = mealDAO.getById(Integer.parseInt(request.getParameter("mealId")));
+                request.setAttribute("meal", meal);
+                request.getRequestDispatcher(INSERT_OR_EDIT).forward(request, response);
+                response.sendRedirect(INSERT_OR_EDIT);
+                break;
+            case ("insert"):
+                request.getRequestDispatcher(INSERT_OR_EDIT).forward(request, response);
+                response.sendRedirect(INSERT_OR_EDIT);
+                break;
+            default:
+                request.setAttribute("meals", MealsUtil.getFiltered(mealDAO.allMeals(), LocalTime.MIN, LocalTime.MAX, MealsUtil.getDefaultCaloriesPerDay()));
+                request.getRequestDispatcher(LIST_MEAL).forward(request, response);
+                response.sendRedirect("meals.jsp");
+                break;
         }
-
-        request.getRequestDispatcher(forward).forward(request, response);
-        response.sendRedirect("meals.jsp");
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
