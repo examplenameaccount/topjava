@@ -51,7 +51,7 @@ public class InMemoryMealRepository implements MealRepository {
                                    LocalDate endDate
     ) {
         if (repository.get(userId) == null) {
-            return null;
+            return new ArrayList<>();
         }
         return repository.get(userId)
                 .values()
