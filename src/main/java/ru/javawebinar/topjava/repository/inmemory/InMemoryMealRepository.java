@@ -17,16 +17,25 @@ public class InMemoryMealRepository implements MealRepository {
     private Map<Integer, Map<Integer, Meal>> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
 
+    {
+        for (int i = 0, j = 3; i < 3 && j < 6; i++, j++) {
+            save(1, MealsUtil.MEALS.get(i));
+            save(2, MealsUtil.MEALS.get(j));
+        }
+    }
+
     @Override
-    public Meal save(Meal meal) {
+    public Meal save(int userId, Meal meal) {
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
-            return repository.computeIfAbsent(meal.getUserId(), key -> new HashMap<>()).put(meal.getId(), meal);
+            Map<Integer, Meal> map = repository.computeIfAbsent(userId, key -> new HashMap<>());
+            map.put(meal.getId(), meal);
+            return map.get(meal.getId());
         }
-        if (repository.get(meal.getUserId()) == null)
+        Map<Integer, Meal> mapMeal = repository.get(meal.getUserId());
+        if (mapMeal == null)
             return null;
-        return repository
-                .get(meal.getUserId())
+        return mapMeal
                 .computeIfPresent(meal.getId(), (integer, meal1) -> meal);
     }
 
@@ -45,21 +54,17 @@ public class InMemoryMealRepository implements MealRepository {
     }
 
     @Override
-    public List<Meal> getAll(int userId) {
+    public List<Meal> getAllWithoutFilter(int userId) {
         if (repository.get(userId) == null) {
             return new ArrayList<>();
         }
-        return repository.get(userId)
-                .values()
-                .stream()
-                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
-                .collect(Collectors.toList());
+        return getAllWithFilter(userId, LocalDate.MIN, LocalDate.MAX);
     }
 
     @Override
-    public List<Meal> getAll(int userId,
-                             LocalDate startDate,
-                             LocalDate endDate
+    public List<Meal> getAllWithFilter(int userId,
+                                       LocalDate startDate,
+                                       LocalDate endDate
     ) {
         if (repository.get(userId) == null) {
             return new ArrayList<>();

@@ -29,20 +29,8 @@ public class SpringMain {
             AdminRestController adminUserController = appCtx.getBean(AdminRestController.class);
             adminUserController.create(new User(null, "userName", "email@mail.ru", "password", Role.ROLE_ADMIN));
             MealRestController mealRestController = appCtx.getBean(MealRestController.class);
-            mealRestController.create(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500));
             SecurityUtil.setAuthUserId(3);
             mealRestController.delete(1);
-//            mealRestController.getAll().forEach(a -> log.info(mealRestController.get(1).toString()));
-//            mealRestController.getAll().forEach(a -> log.info(mealRestController.getAll().toString()));
         }
-    }
-}
-
-class Test {
-    public static void main(String[] args) {
-        Map<Integer, Map<Integer, Meal>> repository = new HashMap<>();
-//        repository.put("awesome key", "cool value");
-        repository.computeIfAbsent(1, a->repository.get(1));
-//        repository.forEach((a, b) -> System.out.println(a + " - " + b));
     }
 }

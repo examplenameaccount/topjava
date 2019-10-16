@@ -53,7 +53,7 @@ public class InMemoryUserRepository implements UserRepository {
         return repository.values()
                 .stream()
                 .sorted(Comparator.comparing(AbstractNamedEntity::getName)
-                        .thenComparing(AbstractBaseEntity::getUserId))
+                        .thenComparing(AbstractBaseEntity::getId))
                 .collect(Collectors.toList());
     }
 }
