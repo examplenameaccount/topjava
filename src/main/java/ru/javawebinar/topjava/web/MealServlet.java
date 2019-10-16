@@ -23,14 +23,16 @@ import java.util.Objects;
 public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
 
+    private final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+
     private MealRestController mealRestController;
-    private DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
-    private ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
+    private ConfigurableApplicationContext appCtx;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
+        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
         this.mealRestController = appCtx.getBean(MealRestController.class);
     }
 
@@ -41,7 +43,7 @@ public class MealServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
 
@@ -77,13 +79,18 @@ public class MealServlet extends HttpServlet {
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
                 break;
+            case "allWithFilter":
+                log.info("getAllWithFilter");
+                request.setAttribute("meals", mealRestController.getAll(!request.getParameter("startDate").isEmpty() ? LocalDate.parse(request.getParameter("startDate"), DATE_FORMATTER) : null,
+                        !request.getParameter("endDate").isEmpty() ? LocalDate.parse(request.getParameter("endDate"), DATE_FORMATTER) : null,
+                        !request.getParameter("startTime").isEmpty() ? LocalTime.parse(request.getParameter("startTime"), TIME_FORMATTER) : null,
+                        !request.getParameter("endTime").isEmpty() ? LocalTime.parse(request.getParameter("endTime"), TIME_FORMATTER) : null));
+                request.getRequestDispatcher("/meals.jsp").forward(request, response);
+                break;
             case "all":
             default:
                 log.info("getAll");
-                request.setAttribute("meals", mealRestController.getAll(request.getParameter("startDate") != null ? LocalDate.parse(request.getParameter("startDate"), DATE_FORMATTER) : null,
-                        request.getParameter("endDate") != null ? LocalDate.parse(request.getParameter("endDate"), DATE_FORMATTER) : null,
-                        request.getParameter("startTime") != null ? LocalTime.parse(request.getParameter("startTime"), TIME_FORMATTER) : null,
-                        request.getParameter("endTime") != null ? LocalTime.parse(request.getParameter("endTime"), TIME_FORMATTER) : null));
+                request.setAttribute("meals", mealRestController.getAll());
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }

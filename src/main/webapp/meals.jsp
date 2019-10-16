@@ -36,22 +36,22 @@
         <form method="get" action="meals">
             <dl>
                 <dt>От даты</dt>
-                <dd><input type="date" name="startDate" required></dd>
+                <dd><input type="date" name="startDate"></dd>
             </dl>
             <dl>
                 <dt>До даты</dt>
-                <dd><input type="date" name="endDate" required></dd>
+                <dd><input type="date" name="endDate"></dd>
             </dl>
             <dl>
                 <dt>От времени</dt>
-                <dd><input type="time" name="startTime" required></dd>
+                <dd><input type="time" name="startTime"></dd>
             </dl>
             <dl>
                 <dt>До времени</dt>
-                <dd><input type="time" name="endTime" required></dd>
+                <dd><input type="time" name="endTime"></dd>
             </dl>
 
-            <button type="submit">Filter</button>
+            <button type="submit" name="action" value="allWithFilter">Filter</button>
             <button onclick="window.history.back()" type="button">Cancel</button>
         </form>
 

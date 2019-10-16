@@ -31,7 +31,10 @@ public class MealRestController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     public List<MealTo> getAll() {
-        return getAll(null, null, null, null);
+        return MealsUtil.getFilteredTos(service.getAll(SecurityUtil.authUserId()),
+                SecurityUtil.authUserCaloriesPerDay(),
+                LocalTime.MIN,
+                LocalTime.MAX);
     }
 
 
@@ -40,18 +43,12 @@ public class MealRestController {
                                LocalTime startTime,
                                LocalTime endTime) {
         log.info("getAll");
-        final List<MealTo> meals =
-                MealsUtil.getTos(service.getAll(SecurityUtil.authUserId(),
-                        startDate == null ? LocalDate.MIN : startDate,
-                        endDate == null ? LocalDate.MAX : endDate),
-                        SecurityUtil.authUserCaloriesPerDay());
-        return meals.stream()
-                .filter(a ->
-                        DateTimeUtil.isBetween(
-                                a.getDateTime().toLocalTime(),
-                                startTime == null ? LocalTime.MIN : startTime,
-                                endTime == null ? LocalTime.MAX : endTime)).
-                        collect(Collectors.toList());
+        return MealsUtil.getFilteredTos(service.getAll(SecurityUtil.authUserId(),
+                startDate == null ? LocalDate.MIN : startDate,
+                endDate == null ? LocalDate.MAX : endDate),
+                SecurityUtil.authUserCaloriesPerDay(),
+                startTime == null ? LocalTime.MIN : startTime,
+                endTime == null ? LocalTime.MAX : endTime);
     }
 
 

@@ -5,7 +5,6 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
-import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -21,12 +20,10 @@ public class InMemoryMealRepository implements MealRepository {
     @Override
     public Meal save(Meal meal) {
         if (meal.isNew()) {
-            repository.putIfAbsent(meal.getUserId(), new HashMap<>());
             meal.setId(counter.incrementAndGet());
-            repository.get(meal.getUserId()).put(meal.getId(), meal);
-            return meal;
+            return repository.computeIfAbsent(meal.getUserId(), key -> new HashMap<>()).put(meal.getId(), meal);
         }
-        if (repository.get(meal.getUserId()) == null || repository.get(meal.getUserId()).get(meal.getId()) == null)
+        if (repository.get(meal.getUserId()) == null)
             return null;
         return repository
                 .get(meal.getUserId())
@@ -35,20 +32,34 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public boolean delete(int userId, int id) {
-        if (repository.get(userId).get(id) == null) return false;
-        return repository.get(userId).remove(id) != null;
+        final Map<Integer, Meal> mapMeal = repository.get(userId);
+        if (mapMeal == null || mapMeal.get(id) == null) return false;
+        return mapMeal.remove(id) != null;
     }
 
     @Override
     public Meal get(int userId, int id) {
-        if (repository.get(userId).get(id) == null) return null;
-        return repository.get(userId).get(id);
+        final Map<Integer, Meal> mapMeal = repository.get(userId);
+        if (mapMeal == null || mapMeal.get(id) == null) return null;
+        return mapMeal.get(id);
     }
 
     @Override
-    public Collection<Meal> getAll(int userId,
-                                   LocalDate startDate,
-                                   LocalDate endDate
+    public List<Meal> getAll(int userId) {
+        if (repository.get(userId) == null) {
+            return new ArrayList<>();
+        }
+        return repository.get(userId)
+                .values()
+                .stream()
+                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Meal> getAll(int userId,
+                             LocalDate startDate,
+                             LocalDate endDate
     ) {
         if (repository.get(userId) == null) {
             return new ArrayList<>();
