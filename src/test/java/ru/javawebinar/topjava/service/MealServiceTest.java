@@ -45,7 +45,7 @@ public class MealServiceTest {
     }
 
     @Test(expected = DataAccessException.class)
-    public void duplicateCreate() throws Exception {
+    public void duplicateCreate() {
         MEAL1.setId(null);
         service.create(MEAL1, USER_ID);
     }
@@ -69,12 +69,12 @@ public class MealServiceTest {
 
 
     @Test(expected = NotFoundException.class)
-    public void deletedNotFound() throws Exception {
+    public void deletedNotFound() {
         service.delete(1, USER_ID);
     }
 
     @Test(expected = NotFoundException.class)
-    public void deletedAnotherMan() throws Exception {
+    public void deletedAnotherMan() {
         service.delete(MEAL1_ID, 100_101);
     }
 
@@ -101,7 +101,7 @@ public class MealServiceTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void updatedAnotherMan() throws Exception {
+    public void updatedAnotherMan() {
         service.update(MEAL1, 100_101);
     }
 }
