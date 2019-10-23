@@ -11,12 +11,24 @@ import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class MealTestData {
     public static final int USER_ID = START_SEQ;
+    public static final int ADMIN_ID = START_SEQ + 1;
 
-    public static final int MEAL1_ID = START_SEQ;
-    public static final int MEAL2_ID = START_SEQ + 1;
+    public static final int MEAL1_ID = 100002;
+    public static final int MEAL2_ID = 100003;
+    public static final int MEAL3_ID = 100004;
+    public static final int MEAL4_ID = 100005;
+    public static final int MEAL5_ID = 100006;
+    public static final int MEAL6_ID = 100007;
 
     public static final Meal MEAL1 = new Meal(MEAL1_ID, LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500);
-    public static final Meal MEAL2 = new Meal(MEAL2_ID, LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 2000);
+    public static final Meal MEAL2 = new Meal(MEAL2_ID, LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000);
+    public static final Meal MEAL3 = new Meal(MEAL3_ID, LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500);
+    public static final Meal MEAL4 = new Meal(MEAL4_ID, LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000);
+    public static final Meal MEAL5 = new Meal(MEAL5_ID, LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500);
+    public static final Meal MEAL6 = new Meal(MEAL6_ID, LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510);
+
+//    public static final Meal MEAL1 = new Meal(MEAL1_ID, LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500);
+//    public static final Meal MEAL2 = new Meal(MEAL2_ID, LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 2000);
 
     public static void assertMatch(Iterable<Meal> actual, Meal... expected) {
         assertMatch(actual, Arrays.asList(expected));
@@ -27,6 +39,6 @@ public class MealTestData {
     }
 
     public static void assertMatch(Meal actual, Meal expected) {
-        assertThat(actual);
+        assertThat(actual).isEqualTo(expected);
     }
 }
