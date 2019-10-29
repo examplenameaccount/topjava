@@ -44,7 +44,6 @@ public class Meal extends AbstractBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    @Column(name = "user")
     private User user;
 
     public Meal() {
