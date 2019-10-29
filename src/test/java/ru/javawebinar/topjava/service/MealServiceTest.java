@@ -1,14 +1,18 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.AfterClass;
+import org.junit.AssumptionViolatedException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.Stopwatch;
 import org.junit.rules.TestName;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.runners.model.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -17,6 +21,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
+import sun.management.snmp.util.MibLogger;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -33,39 +38,18 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 })
 @RunWith(SpringJUnit4ClassRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-@Transactional
 public class MealServiceTest {
+    protected static final Logger log = LoggerFactory.getLogger(MealService.class);
+    protected static List<String> reports = new ArrayList<>();
     @Rule
-    public final TestName testName = new TestName();
-
-    @AfterClass
-    public static void afterClass() {
-        reports.forEach(report -> System.out.println(report));
-    }
+    public MyJUnitStopWatch stopwatch = new MyJUnitStopWatch();
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    @Rule
-    public MyRule rule = new MyRule();
-
-    public static List<String> reports = new ArrayList<>();
-
-    private class MyRule implements TestRule {
-        @Override
-        public Statement apply(Statement base, Description description) {
-            return new Statement() {
-                @Override
-                public void evaluate() throws Throwable {
-                    long start = System.currentTimeMillis();
-                    base.evaluate();
-                    long end = System.currentTimeMillis();
-                    long timeExecutionTest = end - start;
-                    System.out.println("Time for execution test " + timeExecutionTest + " MilliSeconds");
-                    reports.add(testName.getMethodName() + " " + timeExecutionTest);
-                }
-            };
-        }
+    @AfterClass
+    public static void afterClass() {
+        reports.forEach(report -> log.info(report));
     }
 
     @Autowired
