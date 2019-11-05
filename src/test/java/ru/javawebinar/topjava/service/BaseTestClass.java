@@ -40,7 +40,6 @@ import static ru.javawebinar.topjava.UserTestData.USER;
 })
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-@ActiveProfiles(value = {"postgres"})
 public abstract class BaseTestClass {
     private static final Logger log = getLogger("result");
 

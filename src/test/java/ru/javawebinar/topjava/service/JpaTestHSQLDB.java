@@ -4,6 +4,6 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@ActiveProfiles(value = {"jdbc", "postgresRepository"})
-public class JDBCTest extends BaseTestClass {
+@ActiveProfiles(value = {"hsqldb","jpa"})
+public class JpaTestHSQLDB extends BaseTestClass {
 }
