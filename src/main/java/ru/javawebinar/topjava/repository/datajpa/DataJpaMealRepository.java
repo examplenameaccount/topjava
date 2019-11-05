@@ -52,4 +52,9 @@ public class DataJpaMealRepository implements MealRepository {
                 getEndExclusive(endDate),
                 userId);
     }
+
+    @Override
+    public Meal getMealWithUser(int id, int userId) {
+        return crudRepository.getMealWithUser(id, userId);
+    }
 }

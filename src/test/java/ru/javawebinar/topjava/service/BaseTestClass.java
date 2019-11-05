@@ -76,6 +76,14 @@ public abstract class BaseTestClass {
                 "\n---------------------------------");
     }
 
+    public MealService getServiceMeal() {
+        return serviceMeal;
+    }
+
+    public UserService getServiceUser() {
+        return serviceUser;
+    }
+
     @Autowired
     private MealService serviceMeal;
 

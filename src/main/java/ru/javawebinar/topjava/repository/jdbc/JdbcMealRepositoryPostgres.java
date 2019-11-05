@@ -33,4 +33,8 @@ public class JdbcMealRepositoryPostgres extends JdbcMealRepository {
         return (T) meal.getDateTime();
     }
 
+    @Override
+    public Meal getMealWithUser(int id, int userId) {
+        return null;
+    }
 }

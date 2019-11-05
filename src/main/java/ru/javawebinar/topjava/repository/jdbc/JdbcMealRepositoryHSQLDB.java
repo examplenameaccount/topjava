@@ -32,4 +32,9 @@ public class JdbcMealRepositoryHSQLDB extends JdbcMealRepository {
     <T> T abstractDate(Meal meal) {
         return (T) Timestamp.valueOf(meal.getDateTime());
     }
+
+    @Override
+    public Meal getMealWithUser(int id, int userId) {
+        return null;
+    }
 }
