@@ -13,8 +13,7 @@ import java.util.List;
 
 @Transactional(readOnly = true)
 public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
-    @Transactional
-    @Modifying
+    @Transactional(readOnly = true)
     @Query("SELECT m FROM Meal m WHERE m.user.id=:userId ORDER BY m.dateTime DESC")
     List<Meal> getAll(@Param("userId") int userId);
 
@@ -23,8 +22,7 @@ public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
     @Query("DELETE FROM Meal m WHERE m.id=:id AND m.user.id=:userId")
     int delete(@Param("id") int id, @Param("userId") int userId);
 
-    @Transactional
-    @Modifying
+    @Transactional(readOnly = true)
     @Query("SELECT m FROM Meal m " +
             "WHERE m.user.id=:userId AND m.dateTime >= :startDate AND m.dateTime < :endDate ORDER BY m.dateTime DESC")
     List<Meal> getBetweenInclusive(
@@ -33,6 +31,6 @@ public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
             @Param("userId") int userId);
 
     @Transactional
-    @Query("SELECT m FROM Meal m inner JOIN fetch m.user WHERE user_id=:userId and m.id=:id")
+    @Query("SELECT m FROM Meal m LEFT JOIN fetch m.user WHERE user_id=:userId and m.id=:id")
     Meal getMealWithUser(@Param("id") int id, @Param("userId") int userId);
 }

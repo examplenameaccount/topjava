@@ -7,7 +7,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.DateTimeUtil.getEndExclusive;
@@ -15,26 +17,13 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.getStartInclusive;
 
 @Repository
 @Profile("postgresJDBC")
-public class JdbcMealRepositoryPostgres extends JdbcMealRepository {
+public class JdbcMealRepositoryPostgres<R extends Timestamp, T extends LocalDateTime> extends JdbcMealRepository {
     public JdbcMealRepositoryPostgres(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         super(jdbcTemplate, namedParameterJdbcTemplate);
     }
 
     @Override
-    List<Meal> abstractGetBetweenInclusive(JdbcTemplate jdbcTemplate, RowMapper<Meal> rowMapper, LocalDate startDate, LocalDate endDate, int userId) {
-        System.out.println("here");
-        return jdbcTemplate.query(
-                "SELECT * FROM meals WHERE user_id=? AND date_time >=? AND date_time < ? ORDER BY date_time DESC",
-                rowMapper, userId, getStartInclusive(startDate), getEndExclusive(endDate));
-    }
-
-    @Override
-    <T> T abstractDate(Meal meal) {
-        return (T) meal.getDateTime();
-    }
-
-    @Override
-    public Meal getMealWithUser(int id, int userId) {
-        return null;
+    <R extends Timestamp, T extends LocalDateTime> R abstractDate(T t) {
+        return (R) Timestamp.valueOf(t);
     }
 }
