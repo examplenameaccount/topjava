@@ -5,7 +5,9 @@
 <head>
     <title>Meal</title>
     <link rel="stylesheet" href="css/style.css">
+    <base href="${pageContext.request.contextPath}/"/>
 </head>
+<jsp:include page="fragments/headTag.jsp"/>
 <body>
 <section>
     <h3><a href="index.html">Home</a></h3>
