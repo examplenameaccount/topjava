@@ -1,34 +1,51 @@
 package ru.javawebinar.topjava.web.meal;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
+import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
+import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
 @Controller
 @RequestMapping(value = "/meals")
-public class JspMealController {
-    @Autowired
-    private MealService mealService;
-
+public class JspMealController extends AbstractMealController {
     @GetMapping()
     public String getAll(Model model) {
-        model.addAttribute("meals", MealsUtil.getTos(mealService.getAll(SecurityUtil.authUserId()),
-                SecurityUtil.authUserCaloriesPerDay()));
+        model.addAttribute("meals", MealsUtil.getTos(mealService.getAll(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay()));
+        return "meals";
+    }
+
+    @GetMapping("/filter")
+    public String getAllWithFilter(@RequestParam(name = "startDate", required = false) String startDateString,
+                                   @RequestParam(name = "endDate", required = false) String endDateString,
+                                   @RequestParam(name = "startTime", required = false) String startTimeString,
+                                   @RequestParam(name = "endTime", required = false) String endTimeString
+            , Model model) {
+        int userId = SecurityUtil.authUserId();
+
+        LocalDate startDate = parseLocalDate(startDateString);
+        LocalDate endDate = parseLocalDate(endDateString);
+        LocalTime startTime = parseLocalTime(startTimeString);
+        LocalTime endTime = parseLocalTime(endTimeString);
+
+        List<Meal> mealsDateFiltered = mealService.getBetweenDates(startDate, endDate, userId);
+        model.addAttribute("meals", MealsUtil.getFilteredTos(mealsDateFiltered, SecurityUtil.authUserCaloriesPerDay(), startTime, endTime));
         return "meals";
     }
 

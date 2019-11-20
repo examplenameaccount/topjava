@@ -12,38 +12,38 @@
 <jsp:include page="fragments/headTag.jsp"/>
 <body>
 <section>
-    <h3><a href="index.jsp">Home</a></h3>
+    <h3><a href="index.jsp"><spring:message code="app.home"/></a></h3>
     <hr/>
     <h2><spring:message code="meal.title"/></h2>
-    <form method="get" action="meals">
-        <input type="hidden" name="action" value="filter">
+    <form method="get" action="/meals/filter">
+        <input type="hidden">
         <dl>
-            <dt>From Date:</dt>
+            <dt><spring:message code="meal.fromDate"/></dt>
             <dd><input type="date" name="startDate" value="${param.startDate}"></dd>
         </dl>
         <dl>
-            <dt>To Date:</dt>
+            <dt><spring:message code="meal.toDate"/></dt>
             <dd><input type="date" name="endDate" value="${param.endDate}"></dd>
         </dl>
         <dl>
-            <dt>From Time:</dt>
+            <dt><spring:message code="meal.fromTime"/></dt>
             <dd><input type="time" name="startTime" value="${param.startTime}"></dd>
         </dl>
         <dl>
-            <dt>To Time:</dt>
+            <dt><spring:message code="meal.toTime"/></dt>
             <dd><input type="time" name="endTime" value="${param.endTime}"></dd>
         </dl>
-        <button type="submit">Filter</button>
+        <button type="submit"><spring:message code="meal.filter"/></button>
     </form>
     <hr/>
-    <a href="<c:url value='/meals/create'/>">Add Meal</a>
+    <a href="<c:url value='/meals/create'/>"><spring:message code="meal.addMeal"/></a>
     <br><br>
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
         <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Calories</th>
+            <th><spring:message code="meal.date"/></th>
+            <th><spring:message code="meal.description"/></th>
+            <th><spring:message code="meal.calories"/></th>
             <th></th>
             <th></th>
         </tr>
@@ -59,8 +59,8 @@
                 </td>
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
-                <td><a href="<c:url value='/meals/update?id=${meal.id}'/>">Update</a></td>
-                <td><a href="<c:url value='/meals/delete?id=${meal.id}'/>">Delete</a></td>
+                <td><a href="<c:url value='/meals/update?id=${meal.id}'/>"><spring:message code="meal.update"/></a></td>
+                <td><a href="<c:url value='/meals/delete?id=${meal.id}'/>"><spring:message code="meal.delete"/></a></td>
             </tr>
         </c:forEach>
     </table>

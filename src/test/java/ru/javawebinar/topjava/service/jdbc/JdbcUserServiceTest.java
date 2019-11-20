@@ -1,6 +1,9 @@
 package ru.javawebinar.topjava.service.jdbc;
 
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.ActiveProfiles;
+import ru.javawebinar.topjava.repository.JpaUtil;
 import ru.javawebinar.topjava.service.AbstractUserServiceTest;
 
 import static ru.javawebinar.topjava.Profiles.JDBC;

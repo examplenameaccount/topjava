@@ -41,14 +41,6 @@ abstract public class AbstractServiceTest {
     @Autowired
     private Environment environment;
 
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
-    }
-
     //  Check root cause in JUnit: https://github.com/junit-team/junit4/pull/778
     public <T extends Throwable> void validateRootCause(Runnable runnable, Class<T> exceptionClass) {
         try {
@@ -59,7 +51,7 @@ abstract public class AbstractServiceTest {
         }
     }
 
-    public boolean isJdbcProfile() {
-        return Arrays.stream(getEnvironment().getActiveProfiles()).noneMatch(a -> a.equals("jdbc"));
+    public boolean isNotJdbcProfile() {
+        return Arrays.stream(environment.getActiveProfiles()).noneMatch(profile -> profile.equals("jdbc"));
     }
 }
