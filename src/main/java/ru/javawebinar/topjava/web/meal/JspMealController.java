@@ -27,7 +27,9 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 public class JspMealController extends AbstractMealController {
     @GetMapping()
     public String getAll(Model model) {
-        model.addAttribute("meals", MealsUtil.getTos(mealService.getAll(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay()));
+        int userId = SecurityUtil.authUserId();
+        log.info("getAll for user {}", userId);
+        model.addAttribute("meals", MealsUtil.getTos(mealService.getAll(userId), SecurityUtil.authUserCaloriesPerDay()));
         return "meals";
     }
 
@@ -38,12 +40,11 @@ public class JspMealController extends AbstractMealController {
                                    @RequestParam(name = "endTime", required = false) String endTimeString
             , Model model) {
         int userId = SecurityUtil.authUserId();
-
         LocalDate startDate = parseLocalDate(startDateString);
         LocalDate endDate = parseLocalDate(endDateString);
         LocalTime startTime = parseLocalTime(startTimeString);
         LocalTime endTime = parseLocalTime(endTimeString);
-
+        log.info("getBetween dates({} - {}) time({} - {}) for user {}", startDate, endDate, startTime, endTime, userId);
         List<Meal> mealsDateFiltered = mealService.getBetweenDates(startDate, endDate, userId);
         model.addAttribute("meals", MealsUtil.getFilteredTos(mealsDateFiltered, SecurityUtil.authUserCaloriesPerDay(), startTime, endTime));
         return "meals";
@@ -51,7 +52,9 @@ public class JspMealController extends AbstractMealController {
 
     @GetMapping("/delete")
     public String delete(@RequestParam(name = "id") int id) {
-        mealService.delete(id, SecurityUtil.authUserId());
+        int userId = SecurityUtil.authUserId();
+        log.info("delete meal {} for user {}", id, userId);
+        mealService.delete(id, userId);
         return "redirect:/meals";
     }
 
@@ -65,9 +68,11 @@ public class JspMealController extends AbstractMealController {
                 Integer.parseInt(request.getParameter("calories")));
         if (StringUtils.isEmpty(request.getParameter("id"))) {
             checkNew(meal);
+            log.info("create {} for user {}", meal, userId);
             mealService.create(meal, userId);
         } else {
             assureIdConsistent(meal, Integer.parseInt(request.getParameter("id")));
+            log.info("update {} for user {}", meal, userId);
             mealService.update(meal, userId);
         }
         return "redirect:/meals";

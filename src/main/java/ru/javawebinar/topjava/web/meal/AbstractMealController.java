@@ -1,9 +1,13 @@
 package ru.javawebinar.topjava.web.meal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.javawebinar.topjava.service.MealService;
 
-abstract public class AbstractMealController {
+public abstract class AbstractMealController {
     @Autowired
     protected MealService mealService;
+
+    protected static final Logger log = LoggerFactory.getLogger(MealRestController.class);
 }

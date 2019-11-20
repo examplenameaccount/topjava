@@ -13,14 +13,9 @@
 <section>
     <h3><a href="index.html"><spring:message code="app.home"/></a></h3>
     <hr>
-    <c:choose>
-        <c:when test="${empty meal.id}">
-            <h2><spring:message code="meal.add"/></h2>
-        </c:when>
-        <c:otherwise>
-            <h2><spring:message code="meal.edit"/></h2>
-        </c:otherwise>
-    </c:choose>
+    <spring:message code="meal.edit" var="edit"/>
+    <spring:message code="meal.add" var="add"/>
+    <h2>${meal.isNew() ? add : edit}</h2>
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
     <form method="post" action="meals">
         <input type="hidden" name="id" value="${meal.id}">

@@ -20,13 +20,6 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
 @Controller
 public class MealRestController extends AbstractMealController {
-    private static final Logger log = LoggerFactory.getLogger(MealRestController.class);
-
-    @Autowired
-    public MealRestController(MealService service) {
-        this.mealService = service;
-    }
-
     public Meal get(int id) {
         int userId = SecurityUtil.authUserId();
         log.info("get meal {} for user {}", id, userId);

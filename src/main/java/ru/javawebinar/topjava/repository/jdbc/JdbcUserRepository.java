@@ -33,14 +33,18 @@ public class JdbcUserRepository implements UserRepository {
     public final class UserExtractor implements ResultSetExtractor<List<User>> {
         @Override
         public List<User> extractData(ResultSet rs) throws SQLException, DataAccessException {
-            Map<User, Set<Role>> map = new LinkedHashMap<>();
+            Map<Integer, User> map = new LinkedHashMap<>();
             while (rs.next()) {
                 User user = ROW_MAPPER.mapRow(rs, rs.getRow());
-                map.computeIfAbsent(user, var -> EnumSet.noneOf(Role.class));
-                map.get(user).add(Role.valueOf(rs.getString("role")));
+                map.computeIfAbsent(user.getId(), integer ->
+                {
+                    user.setRoles(EnumSet.noneOf(Role.class));
+                    return user;
+                });
+                Role role = Role.valueOf(rs.getString("role"));
+                map.get(user.getId()).getRoles().add(role);
             }
-            map.forEach(User::setRoles);
-            return new ArrayList<>(map.keySet());
+            return new ArrayList<>(map.values());
         }
     }
 
@@ -77,12 +81,11 @@ public class JdbcUserRepository implements UserRepository {
             user.setId(newKey.intValue());
             putRoles(user);
             return user;
-        } else if (namedParameterJdbcTemplate.update(
+        } else if (jdbcTemplate.update("DELETE FROM user_roles where user_id=?", user.getId()) == 0 || namedParameterJdbcTemplate.update(
                 "UPDATE users SET name=:name, email=:email, password=:password, " +
                         "registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id", parameterSource) == 0) {
             return null;
         }
-        jdbcTemplate.update("DELETE FROM user_roles where user_id=?", user.getId());
         putRoles(user);
         return user;
     }
