@@ -14,6 +14,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.ActiveDbProfileResolver;
+import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.TimingRules;
 
 import java.util.Arrays;
@@ -52,6 +53,6 @@ abstract public class AbstractServiceTest {
     }
 
     public boolean isNotJdbcProfile() {
-        return Arrays.stream(environment.getActiveProfiles()).noneMatch(profile -> profile.equals("jdbc"));
+        return Arrays.stream(environment.getActiveProfiles()).noneMatch(profile -> profile.equals(Profiles.JDBC));
     }
 }
