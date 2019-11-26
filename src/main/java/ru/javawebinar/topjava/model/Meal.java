@@ -3,6 +3,8 @@ package ru.javawebinar.topjava.model;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
+import ru.javawebinar.topjava.util.ValidationInterface;
+//import ru.javawebinar.topjava.util.ValidationInterface;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -28,16 +30,16 @@ public class Meal extends AbstractBaseEntity {
     public static final String GET_BETWEEN = "Meal.getBetween";
 
     @Column(name = "date_time", nullable = false)
-    @NotNull
+    @NotNull(groups = ValidationInterface.class)
     private LocalDateTime dateTime;
 
     @Column(name = "description", nullable = false)
-    @NotBlank
+    @NotBlank(groups = ValidationInterface.class)
     @Size(min = 2, max = 120)
     private String description;
 
     @Column(name = "calories", nullable = false)
-    @Range(min = 10, max = 5000)
+    @Range(min = 10, max = 5000 , groups = ValidationInterface.class)
     private int calories;
 
     @ManyToOne(fetch = FetchType.LAZY)

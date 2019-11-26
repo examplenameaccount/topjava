@@ -33,7 +33,7 @@ import static ru.javawebinar.topjava.UserTestData.USER;
 abstract public class AbstractControllerTest {
     private static final CharacterEncodingFilter CHARACTER_ENCODING_FILTER = new CharacterEncodingFilter();
 
-    protected static List<MealTo> expectedValue = MealsUtil.getTos(List.of(MEAL7, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1), USER.getCaloriesPerDay());
+    protected static final List<MealTo> expectedValue = MealsUtil.getTos(List.of(MEAL7, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1), USER.getCaloriesPerDay());
 
     static {
         CHARACTER_ENCODING_FILTER.setEncoding("UTF-8");

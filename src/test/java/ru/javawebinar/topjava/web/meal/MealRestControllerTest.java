@@ -52,7 +52,6 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(newMeal)))
                 .andDo(print())
                 .andExpect(status().isCreated());
-
         Meal created = readFromJson(action, Meal.class);
         Integer newId = created.getId();
         newMeal.setId(newId);
@@ -80,8 +79,11 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void getBetween() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL + "filter?startDate=2015-05-30T00:00:00&endDate=2015-05-31T10:10:10&startTime=2015-05-31T00:00:00&endTime=2013-05-31T20:00:00"))
-                .andDo(print())
+        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL + "filter?" +
+                "startDate=&" +
+                "endDate=&" +
+                "startTime=&" +
+                "endTime="))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(contentJson(expectedValue));
