@@ -22,10 +22,6 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Autowired
     private CacheManager cacheManager;
 
-    @BeforeEach
-    void setUp() throws Exception {
-        cacheManager.getCache("users").clear();
-    }
 
     @Test
     void create() throws Exception {

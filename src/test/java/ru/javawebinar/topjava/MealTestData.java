@@ -3,6 +3,7 @@ package ru.javawebinar.topjava;
 import org.springframework.test.web.servlet.ResultMatcher;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.Month;
 import java.util.List;
@@ -11,6 +12,7 @@ import static java.time.LocalDateTime.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.javawebinar.topjava.TestUtil.readFromJsonMvcResult;
 import static ru.javawebinar.topjava.TestUtil.readListFromJsonMvcResult;
+import static ru.javawebinar.topjava.UserTestData.USER;
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class MealTestData {
@@ -29,6 +31,8 @@ public class MealTestData {
 
     public static final List<Meal> MEALS = List.of(MEAL7, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1);
 
+    public static final List<MealTo> expectedMealTos = MealsUtil.getTos(List.of(MEAL7, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1), USER.getCaloriesPerDay());
+
     public static Meal getNew() {
         return new Meal(null, of(2015, Month.JUNE, 1, 18, 0), "Созданный ужин", 300);
     }
@@ -45,7 +49,7 @@ public class MealTestData {
         assertMatch(actual, List.of(expected));
     }
 
-    public static void assertMatch(Iterable<?> actual, Iterable<?> expected) {
+    public static void assertMatch(Iterable<Meal> actual, Iterable<Meal> expected) {
         assertThat(actual).usingElementComparatorIgnoringFields("user").isEqualTo(expected);
     }
 
@@ -54,6 +58,6 @@ public class MealTestData {
     }
 
     public static ResultMatcher contentJson(List<MealTo> expected) {
-        return result -> assertMatch(readListFromJsonMvcResult(result, MealTo.class), expected);
+        return result -> readListFromJsonMvcResult(result, MealTo.class).equals(expected);
     }
 }
