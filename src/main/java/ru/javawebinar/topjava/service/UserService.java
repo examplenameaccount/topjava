@@ -57,4 +57,8 @@ public class UserService {
     public User getWithMeals(int id) {
         return checkNotFoundWithId(repository.getWithMeals(id), id);
     }
+
+    public User changeEnabled(int id, boolean enabled) {
+        return checkNotFoundWithId(repository.changeEnabled(id, enabled), id);
+    }
 }

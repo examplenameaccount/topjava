@@ -1,13 +1,33 @@
-var context, form;
+var context, form, filterFormData;
 
 function makeEditable(ctx) {
     context = ctx;
     form = $('#detailsForm');
     $(".delete").click(function () {
         if (confirm('Are you sure?')) {
-            deleteRow($(this).attr("id"));
+            deleteRow($(this).closest("tr").attr("id"));
         }
     });
+    $(".filter").click(function () {
+        filter();
+    });
+    $(".reset").click(function () {
+        filterFormData = undefined;
+        updateTable();
+    });
+    $(".checkbox").change(function () {
+        const id = $(this).closest("tr").attr("id");
+        if (this.checked) {
+            $(this).attr("checked", true)
+                .closest("tr").css("color", "green");
+            changeEnabled(id, true);
+        } else {
+            $(this).attr("checked", false)
+                .closest("tr").css("color", "red");
+            changeEnabled(id, false);
+        }
+    });
+
 
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
         failNoty(jqXHR);
@@ -45,7 +65,15 @@ function save() {
         data: form.serialize()
     }).done(function () {
         $("#editRow").modal("hide");
-        updateTable();
+        if (context.ajaxUrl.endsWith("meals/")) {
+            if (filterFormData === undefined) {
+                updateTable();
+            } else {
+                filter();
+            }
+        } else {
+            updateTable();
+        }
         successNoty("Saved");
     });
 }

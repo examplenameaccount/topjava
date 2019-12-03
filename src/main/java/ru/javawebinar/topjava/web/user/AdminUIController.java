@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.web.user;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
@@ -36,5 +37,11 @@ public class AdminUIController extends AbstractUserController {
         if (user.isNew()) {
             super.create(user);
         }
+    }
+
+    @PatchMapping(value = "/{id}")
+    public void changeEnabled(@PathVariable int id,
+                              @RequestParam @Nullable boolean enabled) {
+        super.changeEnabled(id, enabled);
     }
 }
