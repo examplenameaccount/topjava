@@ -32,7 +32,6 @@ public class AdminUIController extends AbstractUserController {
                                @RequestParam String name,
                                @RequestParam String email,
                                @RequestParam String password) {
-
         User user = new User(id, name, email, password, Role.ROLE_USER);
         if (user.isNew()) {
             super.create(user);

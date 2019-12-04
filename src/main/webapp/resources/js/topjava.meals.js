@@ -1,4 +1,11 @@
 $(function () {
+    $(".filter").click(function () {
+        filter();
+    });
+    $(".reset").click(function () {
+        filterFormData = undefined;
+        updateTable();
+    });
     makeEditable({
             ajaxUrl: "ajax/meals/",
             datatableApi: $("#datatable").DataTable({
@@ -44,5 +51,23 @@ function filter() {
         data: filterFormData
     }).done(function (data) {
         context.datatableApi.clear().rows.add(data).draw();
+    });
+}
+
+function saveMeal() {
+    $.ajax({
+        type: "POST",
+        url: context.ajaxUrl,
+        data: form.serialize()
+    }).done(function () {
+        $("#editRow").modal("hide");
+        if (filterFormData === undefined) {
+            updateTable();
+        } else {
+            filter();
+        }
+        successNoty("Saved");
+    }).fail(function () {
+        failNoty("Failed save meal")
     });
 }

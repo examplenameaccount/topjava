@@ -8,27 +8,6 @@ function makeEditable(ctx) {
             deleteRow($(this).closest("tr").attr("id"));
         }
     });
-    $(".filter").click(function () {
-        filter();
-    });
-    $(".reset").click(function () {
-        filterFormData = undefined;
-        updateTable();
-    });
-    $(".checkbox").change(function () {
-        const id = $(this).closest("tr").attr("id");
-        if (this.checked) {
-            $(this).attr("checked", true)
-                .closest("tr").css("color", "green");
-            changeEnabled(id, true);
-        } else {
-            $(this).attr("checked", false)
-                .closest("tr").css("color", "red");
-            changeEnabled(id, false);
-        }
-    });
-
-
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
         failNoty(jqXHR);
     });
@@ -55,26 +34,6 @@ function deleteRow(id) {
 function updateTable() {
     $.get(context.ajaxUrl, function (data) {
         context.datatableApi.clear().rows.add(data).draw();
-    });
-}
-
-function save() {
-    $.ajax({
-        type: "POST",
-        url: context.ajaxUrl,
-        data: form.serialize()
-    }).done(function () {
-        $("#editRow").modal("hide");
-        if (context.ajaxUrl.endsWith("meals/")) {
-            if (filterFormData === undefined) {
-                updateTable();
-            } else {
-                filter();
-            }
-        } else {
-            updateTable();
-        }
-        successNoty("Saved");
     });
 }
 
