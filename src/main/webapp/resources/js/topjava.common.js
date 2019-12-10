@@ -25,7 +25,6 @@ function updateRow(id) {
         converters: {
             "text json": function (result) {
                 let newResult = JSON.parse(result);
-                console.log(newResult.dateTime);
                 if (newResult.dateTime !== undefined) {
                     newResult.dateTime = newResult.dateTime.replace("T", " ");
                 }
