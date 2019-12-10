@@ -2,9 +2,11 @@ package ru.javawebinar.topjava.util;
 
 
 import ru.javawebinar.topjava.HasId;
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.validation.*;
+import java.util.HashSet;
 import java.util.Set;
 
 public class ValidationUtil {
@@ -68,7 +70,14 @@ public class ValidationUtil {
 
     public static <T> void validate(T bean) {
         // https://alexkosarev.name/2018/07/30/bean-validation-api/
-        Set<ConstraintViolation<T>> violations = validator.validate(bean);
+        Set<ConstraintViolation<T>> violations = new HashSet<>();
+        if (bean instanceof Meal) {
+            violations.addAll(validator.validateProperty(bean, "dateTime"));
+            violations.addAll(validator.validateProperty(bean, "description"));
+            violations.addAll(validator.validateProperty(bean, "calories"));
+        } else {
+            violations = validator.validate(bean);
+        }
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }

@@ -8,7 +8,18 @@ function makeEditable(ctx) {
     });
 
     // solve problem with cache in IE: https://stackoverflow.com/a/4303862/548473
-    $.ajaxSetup({cache: false});
+    $.ajaxSetup({
+        cache: false,
+        converters: {
+            "text json": function (result) {
+                let newResult = JSON.parse(result);
+                if (!Array.isArray(newResult)) {
+                    newResult.dateTime = newResult.dateTime.replace("T", " ")
+                }
+                return newResult;
+            }
+        }
+    });
 }
 
 function add() {
