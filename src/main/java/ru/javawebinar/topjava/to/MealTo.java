@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
@@ -18,7 +19,8 @@ public class MealTo extends BaseTo {
     private String description;
 
     @Range(min = 10, max = 10000)
-    private int calories;
+    @NotNull
+    private Integer calories;
 
     private boolean excess;
 

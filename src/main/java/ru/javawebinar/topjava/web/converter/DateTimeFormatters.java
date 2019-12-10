@@ -41,13 +41,13 @@ public class DateTimeFormatters {
     public static class LocalDateTimeFormatter implements Formatter<LocalDateTime> {
 
         @Override
-        public LocalDateTime parse(String text, Locale locale) {
-            return LocalDateTime.parse(text);
+        public LocalDateTime parse(String dateTime, Locale locale) {
+            return LocalDateTime.parse(dateTime.replace(" ", "T"));
         }
 
         @Override
-        public String print(LocalDateTime lt, Locale locale) {
-            return lt.format(DateTimeFormatter.ISO_LOCAL_TIME);
+        public String print(LocalDateTime dateTime, Locale locale) {
+            return dateTime.format(DateTimeFormatter.ISO_LOCAL_TIME);
         }
     }
 }
