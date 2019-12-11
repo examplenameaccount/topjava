@@ -15,19 +15,11 @@ function clearFilter() {
 }
 
 $(function () {
-    $("#startDate").datetimepicker({
+    $("#startDate ,#endDate").datetimepicker({
         format: 'Y-m-d',
         timepicker: false
     });
-    $("#endDate").datetimepicker({
-        format: 'Y-m-d',
-        timepicker: false
-    });
-    $("#startTime").datetimepicker({
-        format: 'H:i',
-        datepicker: false
-    });
-    $("#endTime").datetimepicker({
+    $("#startTime, #endTime").datetimepicker({
         format: 'H:i',
         datepicker: false
     });
@@ -80,12 +72,23 @@ $(function () {
                     ]
                 ],
                 "createdRow": function (row, data, dataIndex) {
-                    data.excess ? $(row).attr("data-mealExcess", true) : $(row).attr("data-mealExcess", false);
+                    $(row).attr("data-mealExcess", data.excess);
                 }
             }),
             updateTable: function () {
                 $.get(mealAjaxUrl, updateTableByData);
-            }
+            },
         }
     );
+    $.ajaxSetup({
+        converters: {
+            "text json": function (result) {
+                let newResult = JSON.parse(result);
+                if (!Array.isArray(newResult) && newResult.dateTime !== undefined) {
+                    newResult.dateTime = newResult.dateTime.replace("T", " ").substring(0, 16);
+                }
+                return newResult;
+            }
+        }
+    });
 });

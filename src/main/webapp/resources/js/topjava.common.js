@@ -6,7 +6,6 @@ function makeEditable(ctx) {
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
         failNoty(jqXHR);
     });
-
     // solve problem with cache in IE: https://stackoverflow.com/a/4303862/548473
     $.ajaxSetup({cache: false});
 }
@@ -19,19 +18,7 @@ function add() {
 
 function updateRow(id) {
     $("#modalTitle").html(i18n["editTitle"]);
-    $.ajax({
-        url: context.ajaxUrl + id,
-        type: "GET",
-        converters: {
-            "text json": function (result) {
-                let newResult = JSON.parse(result);
-                if (newResult.dateTime !== undefined) {
-                    newResult.dateTime = newResult.dateTime.replace("T", " ");
-                }
-                return newResult;
-            }
-        }
-    }).done(function (data) {
+    $.get(context.ajaxUrl + id, function (data) {
         $.each(data, function (key, value) {
             form.find("input[name='" + key + "']").val(value);
         });

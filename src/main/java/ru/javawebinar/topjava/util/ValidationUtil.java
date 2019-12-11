@@ -1,13 +1,15 @@
 package ru.javawebinar.topjava.util;
 
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import ru.javawebinar.topjava.HasId;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.validation.*;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.StringJoiner;
 
 public class ValidationUtil {
 
@@ -70,16 +72,25 @@ public class ValidationUtil {
 
     public static <T> void validate(T bean) {
         // https://alexkosarev.name/2018/07/30/bean-validation-api/
-        Set<ConstraintViolation<T>> violations = new HashSet<>();
-        if (bean instanceof Meal) {
-            violations.addAll(validator.validateProperty(bean, "dateTime"));
-            violations.addAll(validator.validateProperty(bean, "description"));
-            violations.addAll(validator.validateProperty(bean, "calories"));
-        } else {
-            violations = validator.validate(bean);
-        }
+        Set<ConstraintViolation<T>> violations = bean instanceof Meal ? validator.validate(bean, ValidationWithoutUser.class) :
+                validator.validate(bean);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
+    }
+
+    public static ResponseEntity<String> getResponseWithErrors(BindingResult result) {
+        StringJoiner joiner = new StringJoiner("<br>");
+        result.getFieldErrors().forEach(
+                fe -> {
+                    String msg = fe.getDefaultMessage();
+                    if (msg != null) {
+                        if (!msg.startsWith(fe.getField())) {
+                            msg = fe.getField() + ' ' + msg;
+                        }
+                        joiner.add(msg);
+                    }
+                });
+        return ResponseEntity.unprocessableEntity().body(joiner.toString());
     }
 }
