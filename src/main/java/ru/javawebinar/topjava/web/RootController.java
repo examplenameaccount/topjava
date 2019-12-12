@@ -31,7 +31,7 @@ public class RootController {
     }
 
     @GetMapping("/meals")
-    public List<MealTo> getMeals() {
-        return MealsUtil.getTos(mealService.getAll(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay());
+    public String getMeals() {
+        return "meals";
     }
 }

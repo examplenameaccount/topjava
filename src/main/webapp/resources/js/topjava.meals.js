@@ -1,6 +1,20 @@
 var mealAjaxUrl = "ajax/profile/meals/";
 $.datetimepicker.setLocale('ru');
 
+$.ajaxSetup({
+    converters: {
+        "text json": function (result) {
+            let newResult = JSON.parse(result);
+            if (newResult.dateTime !== undefined) {
+                newResult.dateTime = newResult.dateTime.replace("T", " ").substring(0, 16);
+            } else if (newResult[0].dateTime !== undefined) {
+                newResult.forEach(key => key.dateTime = key.dateTime.replace("T", " ").substring(0, 16));
+            }
+            return newResult;
+        }
+    }
+});
+
 function updateFilteredTable() {
     $.ajax({
         type: "GET",
@@ -80,15 +94,4 @@ $(function () {
             },
         }
     );
-    $.ajaxSetup({
-        converters: {
-            "text json": function (result) {
-                let newResult = JSON.parse(result);
-                if (!Array.isArray(newResult) && newResult.dateTime !== undefined) {
-                    newResult.dateTime = newResult.dateTime.replace("T", " ").substring(0, 16);
-                }
-                return newResult;
-            }
-        }
-    });
 });
