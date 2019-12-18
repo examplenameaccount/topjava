@@ -62,6 +62,16 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void createWithDataIntegrityException() throws Exception {
+        UserTo newTo = new UserTo(null, "newName", "admin@gmail.com", "newPassword", 1500);
+
+        perform(doPost("/register").jsonBody(newTo))
+                .andDo(print())
+                .andExpect(status().isConflict())
+                .andReturn();
+    }
+
+    @Test
     void update() throws Exception {
         UserTo updatedTo = new UserTo(null, "newName", "newemail@ya.ru", "newPassword", 1500);
         perform(doPut().jsonBody(updatedTo).basicAuth(USER))
@@ -69,5 +79,13 @@ class ProfileRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isNoContent());
 
         USER_MATCHERS.assertMatch(userService.get(USER_ID), UserUtil.updateFromTo(new User(USER), updatedTo));
+    }
+
+    @Test
+    void updateWithDataIntegrityException() throws Exception {
+        UserTo updatedTo = new UserTo(null, "newName", "user@yandex.ru", "newPassword", 1500);
+        perform(doPut().jsonBody(updatedTo).basicAuth(USER))
+                .andExpect(status().isConflict())
+                .andReturn();
     }
 }

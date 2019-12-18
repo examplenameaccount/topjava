@@ -29,8 +29,16 @@ public class MealTestData {
         return new Meal(null, of(2015, Month.JUNE, 1, 18, 0), "Созданный ужин", 300);
     }
 
+    public static Meal getNewWithSameDate() {
+        return new Meal(null, MEAL2.getDateTime(), "Созданный ужин", 300);
+    }
+
     public static Meal getUpdated() {
         return new Meal(MEAL1_ID, MEAL1.getDateTime(), "Обновленный завтрак", 200);
+    }
+
+    public static Meal getUpdatedWithSameDate() {
+        return new Meal(MEAL1_ID, MEAL2.getDateTime(), "Обновленный завтрак", 200);
     }
 
     public static TestMatchers<Meal> MEAL_MATCHERS = TestMatchers.useFieldsComparator(Meal.class, "user");

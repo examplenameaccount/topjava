@@ -89,6 +89,13 @@ class AdminRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void updateWithDataIntegrityException() throws Exception {
+        User updated = UserTestData.getNewWithSameEmail();
+        perform(doPut(USER_ID).jsonBody(updated).basicAuth(ADMIN))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
     void createWithLocation() throws Exception {
         User newUser = UserTestData.getNew();
         ResultActions action = perform(doPost().jsonUserWithPassword(newUser).basicAuth(ADMIN))
@@ -99,6 +106,13 @@ class AdminRestControllerTest extends AbstractControllerTest {
         newUser.setId(newId);
         USER_MATCHERS.assertMatch(created, newUser);
         USER_MATCHERS.assertMatch(userService.get(newId), newUser);
+    }
+
+    @Test
+    void createWithDataIntegrityException() throws Exception {
+        User newUser = UserTestData.getNewWithSameEmail();
+        perform(doPost().jsonUserWithPassword(newUser).basicAuth(ADMIN))
+                .andExpect(status().isConflict());
     }
 
     @Test

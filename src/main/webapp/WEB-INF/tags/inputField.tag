@@ -10,6 +10,7 @@
     <div class="form-group ${status.error ? 'error' : '' }">
         <label class="col-form-label"><spring:message code="${labelCode}"/></label>
         <c:choose>
+            <c:when test="${inputType == 'id'}"><form:input path="${name}" class="form-control is-invalid"/></c:when>
             <c:when test="${inputType == 'password'}"><form:password path="${name}" class="form-control is-invalid"/></c:when>
             <c:when test="${inputType == 'number'}"><form:input path="${name}" type="number" class="form-control is-invalid"/></c:when>
             <c:otherwise><form:input path="${name}" class="form-control is-invalid"/></c:otherwise>

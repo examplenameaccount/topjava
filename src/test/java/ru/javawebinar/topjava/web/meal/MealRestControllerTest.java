@@ -4,6 +4,7 @@ package ru.javawebinar.topjava.web.meal;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.model.Meal;
@@ -78,6 +79,13 @@ class MealRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void updateWithDataIntegrityException() throws Exception {
+        Meal updated = MealTestData.getUpdatedWithSameDate();
+        perform(doPut(MEAL1_ID).jsonBody(updated).basicAuth(USER))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
     void createWithLocation() throws Exception {
         Meal newMeal = MealTestData.getNew();
         ResultActions action = perform(doPost().jsonBody(newMeal).basicAuth(USER));
@@ -87,6 +95,13 @@ class MealRestControllerTest extends AbstractControllerTest {
         newMeal.setId(newId);
         MEAL_MATCHERS.assertMatch(created, newMeal);
         MEAL_MATCHERS.assertMatch(mealService.get(newId, USER_ID), newMeal);
+    }
+
+    @Test
+    void createWithDataIntegrityException() throws Exception {
+        Meal newMeal = MealTestData.getNewWithSameDate();
+        perform(doPost().jsonBody(newMeal).basicAuth(USER))
+                .andExpect(status().isConflict());
     }
 
     @Test
