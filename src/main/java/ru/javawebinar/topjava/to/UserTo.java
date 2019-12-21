@@ -11,22 +11,21 @@ import java.io.Serializable;
 
 public class UserTo extends BaseTo implements Serializable {
     private static final long serialVersionUID = 1L;
-
-    @NotBlank
-    @Size(min = 2, max = 100)
+    @NotBlank(message = "Name.form")
+    @Size(min = 2, max = 100, message = "Name.form.size")
     private String name;
 
     @Email
-    @NotBlank
-    @Size(max = 100)
+    @NotBlank(message = "NotEmpty.userForm.email")
+    @Size(max = 100, message = "Email.userForm.size")
     private String email;
 
-    @NotBlank
-    @Size(min = 5, max = 32, message = "length must be between 5 and 32 characters")
+    @NotBlank(message = "NotEmpty.userForm.password")
+    @Size(min = 5, max = 32, message = "Password.userForm.size")
     private String password;
 
-    @Range(min = 10, max = 10000)
-    @NotNull
+    @Range(min = 10, max = 10000, message = "CaloriesPerDay.userForm.size")
+    @NotNull(message = "NotEmpty.userForm.caloriesPerDay")
     private Integer caloriesPerDay = UserUtil.DEFAULT_CALORIES_PER_DAY;
 
     public UserTo() {

@@ -16,7 +16,7 @@ import javax.validation.Valid;
 public class ProfileUIController extends AbstractUserController {
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
-        binder.setValidator(profileUserUIValidator);
+        binder.addValidators(profileUserUIValidator);
     }
 
     @GetMapping
